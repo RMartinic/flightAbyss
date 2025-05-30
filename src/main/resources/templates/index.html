@@ -31,21 +31,44 @@
       <button type="submit">Search</button>
     </form>
   </div>
-  <div class = "results-div">
+  <div class = "matching-div">
     <h2>Results</h2>
     <table border="1">
       <tr>
         <th>Departure Airport</th>
         <th>Destination Airport</th>
         <th>Departure Time</th>
-        <th>Return Time</th>
         <th>Number of passengers</th>
-        <th>Price</th>
+        <th>Total price</th>
+        <th>Currency</th>
       </tr>
-      <tr th:each="flight : ${results}">
+      <tr th:each="flight : ${matching}">
         <td th:text="${flight.itineraries[0].segments[0].departure.iataCode}">Origin</td>
         <td th:text="${flight.itineraries[0].segments[0].arrival.iataCode}">Destination</td>
         <td th:text="${flight.itineraries[0].segments[0].departure.at}">Departure Date</td>
+        <td th:text="${numberOfPassengers}">Number of passengers</td>
+        <td th:text="${flight.price.total}">Price</td>
+        <td th:text="${flight.price.currency}">Currency</td>
+      </tr>
+      </tr>
+    </table>
+  </div>
+  <div class = "alternatives-div">
+    <h2>We might also interest you in:</h2>
+    <table border="1">
+      <tr>
+        <th>Departure Airport</th>
+        <th>Destination Airport</th>
+        <th>Departure Time</th>
+        <th>Number of passengers</th>
+        <th>Total price</th>
+        <th>Currency</th>
+      </tr>
+      <tr th:each="flight : ${alternatives}">
+        <td th:text="${flight.itineraries[0].segments[0].departure.iataCode}">Origin</td>
+        <td th:text="${flight.itineraries[0].segments[0].arrival.iataCode}">Destination</td>
+        <td th:text="${flight.itineraries[0].segments[0].departure.at}">Departure Date</td>
+        <td th:text="${numberOfPassengers}">Number of passengers</td>
         <td th:text="${flight.price.total}">Price</td>
         <td th:text="${flight.price.currency}">Currency</td>
       </tr>

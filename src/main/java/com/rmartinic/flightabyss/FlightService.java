@@ -13,7 +13,7 @@ import java.time.LocalDate;
 public class FlightService {
     @Autowired
     private AmadeusAuth authSerivce;
-    public FlightOfferSearch[] searchFlights(String originAirport, String destinationAirport, String departureDate, String returnDate, int numberOfPassengers, String currency ) throws ResponseException {
+    public FlightOfferSearch[] searchFlights(String originAirport, String destinationAirport, String departureDate, int numberOfPassengers, String currency ) throws ResponseException {
         Amadeus amadeus = authSerivce.getAmadeusClient();
         return amadeus.shopping.flightOffersSearch.get(
                 Params.with("originLocationCode", originAirport)
@@ -21,6 +21,16 @@ public class FlightService {
                         .and("departureDate", departureDate)
                         .and("adults", numberOfPassengers)
                         .and("currencyCode",currency)
+        );
+    }
+    public FlightOfferSearch[] searchReturnFlights(String originAirport, String destinationAirport, String returnDate, int numberOfPassengers, String currency ) throws ResponseException {
+        Amadeus amadeus = authSerivce.getAmadeusClient();
+        return amadeus.shopping.flightOffersSearch.get(
+                Params.with("originLocationCode", destinationAirport)
+                        .and("destinationLocationCode", originAirport)
+                        .and("departureDate", returnDate)
+                        .and("adults", numberOfPassengers)
+                        .and("currencyCode", currency)
         );
     }
 }

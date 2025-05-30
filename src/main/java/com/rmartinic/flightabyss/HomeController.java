@@ -1,5 +1,6 @@
 package com.rmartinic.flightabyss;
 
+import com.amadeus.resources.FlightOfferSearch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,8 +32,20 @@ public class HomeController {
                                 @RequestParam(defaultValue = "EUR") String currency,
                                 Model model){
         try {
-            var results = flightService.searchFlights(originAirport, destinationAirport, departureDate,returnDate,numberOfPassengers,currency);
-            model.addAttribute("results", results);
+            List<FlightOfferSearch> matchingOutgoing = new ArrayList<>();
+            List<FlightOfferSearch> alternativesOutgoing = new ArrayList<>();
+            var results = flightService.searchFlights(originAirport, destinationAirport, departureDate,numberOfPassengers,currency);
+            for (var flight : results){
+                if(flight.getItineraries()[0].getSegments()[0].getArrival().getIataCode().equalsIgnoreCase(destinationAirport)){
+                    matchingOutgoing.add(flight);
+                }
+                else{
+                    alternativesOutgoing.add(flight);
+                }
+            }
+            model.addAttribute("matching", matchingOutgoing);
+            model.addAttribute("alternatives", alternativesOutgoing);
+            model.addAttribute("numberOfPassengers", numberOfPassengers);
         } catch (Exception e){
             model.addAttribute("error", e.getMessage());
         }
