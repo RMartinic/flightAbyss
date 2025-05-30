@@ -34,6 +34,9 @@ public class HomeController {
         try {
             List<FlightOfferSearch> matchingOutgoing = new ArrayList<>();
             List<FlightOfferSearch> alternativesOutgoing = new ArrayList<>();
+            List<FlightOfferSearch> matchingReturning = new ArrayList<>();
+            List<FlightOfferSearch> alternativesReturning = new ArrayList<>();
+
             var results = flightService.searchFlights(originAirport, destinationAirport, departureDate,numberOfPassengers,currency);
             for (var flight : results){
                 if(flight.getItineraries()[0].getSegments()[0].getArrival().getIataCode().equalsIgnoreCase(destinationAirport)){
@@ -43,8 +46,21 @@ public class HomeController {
                     alternativesOutgoing.add(flight);
                 }
             }
-            model.addAttribute("matching", matchingOutgoing);
-            model.addAttribute("alternatives", alternativesOutgoing);
+            if(returnDate != null && !returnDate.isEmpty()){
+                results = flightService.searchReturnFlights(originAirport, destinationAirport, returnDate, numberOfPassengers, currency);
+                for (var flight : results){
+                    if(flight.getItineraries()[0].getSegments()[0].getArrival().getIataCode().equalsIgnoreCase(originAirport)){
+                        matchingReturning.add(flight);
+                    }
+                    else{
+                        alternativesReturning.add(flight);
+                    }
+                }
+            }
+            model.addAttribute("matchingOutgoing", matchingOutgoing);
+            model.addAttribute("alternativesOutgoing", alternativesOutgoing);
+            model.addAttribute("matchingReturning", matchingReturning);
+            model.addAttribute("alternativesReturning", alternativesReturning);
             model.addAttribute("numberOfPassengers", numberOfPassengers);
         } catch (Exception e){
             model.addAttribute("error", e.getMessage());
