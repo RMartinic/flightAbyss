@@ -62,7 +62,7 @@ public class HomeController {
             if (outgoingFlights.isEmpty()){
                 model.addAttribute("errorNoFlights","Sorry, we did not find any outgoing flights you searched on that date.");
             }
-            if (returnFlights.isEmpty() && returnDate!=null){
+            if (returnFlights.isEmpty() && returnDate!=null && !returnDate.isEmpty()){
                 model.addAttribute("errorNoReturnFlights","Sorry, we did not find any returning flights you searched on that date.");
             }
 
