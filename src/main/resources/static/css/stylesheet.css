@@ -28,7 +28,7 @@ h1 {
 
 main {
     display: flex;
-    height: calc(100vh - 100px); /* fill remaining height below header */
+    height: calc(100vh - 100px);
 }
 
 .search-form {
