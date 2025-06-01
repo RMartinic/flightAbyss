@@ -44,7 +44,6 @@ public class FlightService {
                         .and("adults", numberOfPassengers)
                         .and("currencyCode", currency)
         );
-        System.out.println("Offers fetched: " + offers.length);
 
 
         FlightOfferSearch[] combinedOffers;

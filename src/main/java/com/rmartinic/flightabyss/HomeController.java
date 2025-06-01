@@ -36,33 +36,43 @@ public class HomeController {
         try {
             List<FlightOfferSearch> outgoingFlights = new ArrayList<>();
             List<FlightOfferSearch> returnFlights = new ArrayList<>();
-            List<FlightOfferSearch> alternatives = new ArrayList<>();
+            List<FlightOfferSearch> outgoingAlternatives = new ArrayList<>();
+            List<FlightOfferSearch> returningAlternatives = new ArrayList<>();
 
 
             var results = flightService.searchWithCache(originAirport, destinationAirport, departureDate,returnDate, numberOfPassengers,currency);
             for (FlightResult flightResult : results){
                 FlightOfferSearch offer = JsonUtil.deserializeFromJson(flightResult.getOfferJson());
                 String arrivalCode = offer.getItineraries()[0].getSegments()[0].getArrival().getIataCode();
+                String flightDate = offer.getItineraries()[0].getSegments()[0].getDeparture().getAt().substring(0,10);
                 if (arrivalCode.equalsIgnoreCase(destinationAirport)){
                     outgoingFlights.add(offer);
                 }
                 else if(arrivalCode.equalsIgnoreCase(originAirport)){
                     returnFlights.add(offer);
                 }
-                else {
-                    alternatives.add(offer);
+                else if(flightDate.equalsIgnoreCase(departureDate)){
+                    outgoingAlternatives.add(offer);
+                }
+                else{
+                    returningAlternatives.add(offer);
                 }
 
+            }
+            if (outgoingFlights.isEmpty()){
+                model.addAttribute("errorNoFlights","Sorry, we did not find any outgoing flights you searched on that date.");
+            }
+            if (returnFlights.isEmpty() && returnDate!=null){
+                model.addAttribute("errorNoReturnFlights","Sorry, we did not find any returning flights you searched on that date.");
             }
 
             model.addAttribute("outgoing", outgoingFlights);
             model.addAttribute("returning", returnFlights);
-            model.addAttribute("alternatives", alternatives);
+            model.addAttribute("outgoingAlternatives", outgoingAlternatives);
+            model.addAttribute("returningAlternatives", returningAlternatives);
             model.addAttribute("numberOfPassengers", numberOfPassengers);
         } catch (Exception e){
-            model.addAttribute("error", e.getMessage());
-            System.out.println("Exception occurred in try block:");
-            e.printStackTrace();
+            model.addAttribute("error", "An error occurred while searching for flights: " + e.getMessage());
         }
         return "index";
     }

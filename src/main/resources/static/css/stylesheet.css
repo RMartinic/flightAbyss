@@ -1,0 +1,97 @@
+body {
+    font-family: Tahoma, sans-serif;
+    margin: 0;
+}
+
+header {
+    background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+    background-repeat: repeat;
+    background-color: black;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 2px solid white;
+}
+
+h1 {
+    font-family: Arial Black, sans-serif;
+    color: #2c3e91;
+    font-size: 2.75em;
+    text-shadow:
+            -1px -1px 0 white,
+            1px -1px 0 white,
+            -1px  1px 0 white,
+            1px  1px 0 white;
+}
+
+main {
+    display: flex;
+    height: calc(100vh - 100px); /* fill remaining height below header */
+}
+
+.search-form {
+    background-color: #2c3e91;
+    color: white;
+    width: 300px;
+    min-width: 250px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.search-form h2 {
+    font-size: 1.75em;
+    text-shadow:
+            -2px -2px 0 black,
+            2px -2px 0 black,
+            -2px  2px 0 black,
+            2px  2px 0 black;
+}
+
+.search-form label,
+.search-form input,
+.search-form select,
+.search-form button {
+    font-size: 1.1em;
+    margin: 10px 0;
+    display: block;
+    width: 100%;
+}
+.table-space {
+    flex: 1;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    color: #2c3e91;
+}
+table, table th,table td{
+    border: 2px groove #2c3e91;
+}
+table{
+    margin: 10px 0px;
+}
+.welcome-gif{
+    position: relative;
+    right:9%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.error-message{
+    background-color: red;
+    opacity: 60%;
+    font-weight: bold;
+    border-radius: 10px;
+    color: white;
+    width: 350px;
+    height: 60px;
+}
+.fa-solid{
+    margin: 0px 20px;
+}
+.fa-circle-xmark{
+    margin: 10px 10px;
+}
