@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import com.rmartinic.flightabyss.util.JsonUtil;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
+import com.rmartinic.flightabyss.FlightService;
+
 
 @Controller
 public class HomeController {
@@ -32,38 +34,35 @@ public class HomeController {
                                 @RequestParam(defaultValue = "EUR") String currency,
                                 Model model){
         try {
-            List<FlightOfferSearch> matchingOutgoing = new ArrayList<>();
-            List<FlightOfferSearch> alternativesOutgoing = new ArrayList<>();
-            List<FlightOfferSearch> matchingReturning = new ArrayList<>();
-            List<FlightOfferSearch> alternativesReturning = new ArrayList<>();
+            List<FlightOfferSearch> outgoingFlights = new ArrayList<>();
+            List<FlightOfferSearch> returnFlights = new ArrayList<>();
+            List<FlightOfferSearch> alternatives = new ArrayList<>();
 
-            var results = flightService.searchFlights(originAirport, destinationAirport, departureDate,numberOfPassengers,currency);
-            for (var flight : results){
-                if(flight.getItineraries()[0].getSegments()[0].getArrival().getIataCode().equalsIgnoreCase(destinationAirport)){
-                    matchingOutgoing.add(flight);
+
+            var results = flightService.searchWithCache(originAirport, destinationAirport, departureDate,returnDate, numberOfPassengers,currency);
+            for (FlightResult flightResult : results){
+                FlightOfferSearch offer = JsonUtil.deserializeFromJson(flightResult.getOfferJson());
+                String arrivalCode = offer.getItineraries()[0].getSegments()[0].getArrival().getIataCode();
+                if (arrivalCode.equalsIgnoreCase(destinationAirport)){
+                    outgoingFlights.add(offer);
                 }
-                else{
-                    alternativesOutgoing.add(flight);
+                else if(arrivalCode.equalsIgnoreCase(originAirport)){
+                    returnFlights.add(offer);
                 }
+                else {
+                    alternatives.add(offer);
+                }
+
             }
-            if(returnDate != null && !returnDate.isEmpty()){
-                results = flightService.searchReturnFlights(originAirport, destinationAirport, returnDate, numberOfPassengers, currency);
-                for (var flight : results){
-                    if(flight.getItineraries()[0].getSegments()[0].getArrival().getIataCode().equalsIgnoreCase(originAirport)){
-                        matchingReturning.add(flight);
-                    }
-                    else{
-                        alternativesReturning.add(flight);
-                    }
-                }
-            }
-            model.addAttribute("matchingOutgoing", matchingOutgoing);
-            model.addAttribute("alternativesOutgoing", alternativesOutgoing);
-            model.addAttribute("matchingReturning", matchingReturning);
-            model.addAttribute("alternativesReturning", alternativesReturning);
+
+            model.addAttribute("outgoing", outgoingFlights);
+            model.addAttribute("returning", returnFlights);
+            model.addAttribute("alternatives", alternatives);
             model.addAttribute("numberOfPassengers", numberOfPassengers);
         } catch (Exception e){
             model.addAttribute("error", e.getMessage());
+            System.out.println("Exception occurred in try block:");
+            e.printStackTrace();
         }
         return "index";
     }
