@@ -1,0 +1,1 @@
+This is sorting functionality I added after the deadline beacause I did not know if it was a necessity in the task or not, either way, the software is better in this way, and thats why it is in different branch,to not get confused with the task submitted on the deadline.
