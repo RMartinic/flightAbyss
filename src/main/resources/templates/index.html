@@ -12,7 +12,7 @@
 <main>
   <div class="search-form">
     <h2>Flight information</h2>
-    <form action ="/search" method="post">
+    <form action="/search" method="post">
       <label for="origin-airport">Enter flight origin airport:</label>
       <input type="text" id="origin-airport" name="originAirport" placeholder="Origin Airport (e.g. ZAG)" required>
       <label for="destination-airport">Enter flight destination airport:</label>
@@ -37,95 +37,117 @@
       <img src="/images/giphy.gif" alt="Welcome animation">
       <p>Welcome! Start your search to explore flights.</p>
     </div>
-  <div class = "outgoing-div" th:if="${!#lists.isEmpty(outgoing)}">
-    <h2>Results:</h2>
-    <table>
-      <tr>
-        <th>Departure Airport</th>
-        <th>Destination Airport</th>
-        <th>Departure Time</th>
-        <th>Number of passengers</th>
-        <th>Total price</th>
-        <th>Currency</th>
-      </tr>
-      <tr th:each="flight : ${outgoing}">
-        <td th:text="${flight.itineraries[0].segments[0].departure.iataCode}">Origin</td>
-        <td th:text="${flight.itineraries[0].segments[0].arrival.iataCode}">Destination</td>
-        <td class="datetime" th:text="${flight.itineraries[0].segments[0].departure.at}">Departure Date</td>
-        <td th:text="${numberOfPassengers}">Number of passengers</td>
-        <td th:text="${flight.price.total}">Price</td>
-        <td th:text="${flight.price.currency}">Currency</td>
-      </tr>
-    </table>
-  </div>
+
+    <div class="outgoing-div" th:if="${!#lists.isEmpty(outgoing)}">
+      <h2>Results:</h2>
+      <table>
+        <thead>
+        <tr>
+          <th>Departure Airport</th>
+          <th>Destination Airport</th>
+          <th class="sortable" data-sort="datetime">Departure Time</th>
+          <th>Number of passengers</th>
+          <th class="sortable" data-sort="price">Total price</th>
+          <th>Currency</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="flight : ${outgoing}">
+          <td th:text="${flight.itineraries[0].segments[0].departure.iataCode}">Origin</td>
+          <td th:text="${flight.itineraries[0].segments[0].arrival.iataCode}">Destination</td>
+          <td class="datetime" th:text="${flight.itineraries[0].segments[0].departure.at}">Departure Date</td>
+          <td th:text="${numberOfPassengers}">Number of passengers</td>
+          <td th:text="${flight.price.total}">Price</td>
+          <td th:text="${flight.price.currency}">Currency</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
     <div th:if="${errorNoFlights}" class="error-message">
       <p><i class="fa-solid fa-circle-xmark"></i> <span th:text="${errorNoFlights}"></span></p>
     </div>
-    <div class = "returning-div" th:if="${!#lists.isEmpty(returning)}">
-    <h2>Returning flights:</h2>
-    <table>
-      <tr>
-        <th>Departure Airport</th>
-        <th>Destination Airport</th>
-        <th>Departure Time</th>
-        <th>Number of passengers</th>
-        <th>Total price</th>
-        <th>Currency</th>
-      </tr>
-      <tr th:each="flight : ${returning}">
-        <td th:text="${flight.itineraries[0].segments[0].departure.iataCode}">Origin</td>
-        <td th:text="${flight.itineraries[0].segments[0].arrival.iataCode}">Destination</td>
-        <td class="datetime" th:text="${flight.itineraries[0].segments[0].departure.at}">Departure Date</td>
-        <td th:text="${numberOfPassengers}">Number of passengers</td>
-        <td th:text="${flight.price.total}">Price</td>
-        <td th:text="${flight.price.currency}">Currency</td>
-      </tr>
-    </table>
-  </div>
+
+    <div class="returning-div" th:if="${!#lists.isEmpty(returning)}">
+      <h2>Returning flights:</h2>
+      <table>
+        <thead>
+        <tr>
+          <th>Departure Airport</th>
+          <th>Destination Airport</th>
+          <th class="sortable" data-sort="datetime">Departure Time</th>
+          <th>Number of passengers</th>
+          <th class="sortable" data-sort="price">Total price</th>
+          <th>Currency</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="flight : ${returning}">
+          <td th:text="${flight.itineraries[0].segments[0].departure.iataCode}">Origin</td>
+          <td th:text="${flight.itineraries[0].segments[0].arrival.iataCode}">Destination</td>
+          <td class="datetime" th:text="${flight.itineraries[0].segments[0].departure.at}">Departure Date</td>
+          <td th:text="${numberOfPassengers}">Number of passengers</td>
+          <td th:text="${flight.price.total}">Price</td>
+          <td th:text="${flight.price.currency}">Currency</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
     <div th:if="${errorNoReturnFlights}" class="error-message">
       <p><i class="fa-solid fa-circle-xmark"></i> <span th:text="${errorNoReturnFlights}"></span></p>
     </div>
-  <div class = "alternatives-outgoing" th:if="${!#lists.isEmpty(outgoingAlternatives) }">
-    <h2>You also might be interested in:</h2>
-    <table>
-      <tr>
-        <th>Departure Airport</th>
-        <th>Destination Airport</th>
-        <th>Departure Time</th>
-        <th>Number of passengers</th>
-        <th>Total price</th>
-        <th>Currency</th>
-      </tr>
-      <tr th:each="flight : ${outgoingAlternatives}">
-        <td th:text="${flight.itineraries[0].segments[0].departure.iataCode}">Origin</td>
-        <td th:text="${flight.itineraries[0].segments[0].arrival.iataCode}">Destination</td>
-        <td class="datetime" th:text="${flight.itineraries[0].segments[0].departure.at}">Departure Date</td>
-        <td th:text="${numberOfPassengers}">Number of passengers</td>
-        <td th:text="${flight.price.total}">Price</td>
-        <td th:text="${flight.price.currency}">Currency</td>
-      </tr>
-    </table>
+
+    <div class="alternatives-outgoing" th:if="${!#lists.isEmpty(outgoingAlternatives)}">
+      <h2>You also might be interested in:</h2>
+      <table>
+        <thead>
+        <tr>
+          <th>Departure Airport</th>
+          <th>Destination Airport</th>
+          <th class="sortable" data-sort="datetime">Departure Time</th>
+          <th>Number of passengers</th>
+          <th class="sortable" data-sort="price">Total price</th>
+          <th>Currency</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="flight : ${outgoingAlternatives}">
+          <td th:text="${flight.itineraries[0].segments[0].departure.iataCode}">Origin</td>
+          <td th:text="${flight.itineraries[0].segments[0].arrival.iataCode}">Destination</td>
+          <td class="datetime" th:text="${flight.itineraries[0].segments[0].departure.at}">Departure Date</td>
+          <td th:text="${numberOfPassengers}">Number of passengers</td>
+          <td th:text="${flight.price.total}">Price</td>
+          <td th:text="${flight.price.currency}">Currency</td>
+        </tr>
+        </tbody>
+      </table>
     </div>
+
     <div class="alternatives-returning" th:if="${!#lists.isEmpty((returningAlternatives))}">
-    <table >
-      <tr>
-        <th>Departure Airport</th>
-        <th>Destination Airport</th>
-        <th>Departure Time</th>
-        <th>Number of passengers</th>
-        <th>Total price</th>
-        <th>Currency</th>
-      </tr>
-      <tr th:each="flight : ${returningAlternatives}">
-        <td th:text="${flight.itineraries[0].segments[0].departure.iataCode}">Origin</td>
-        <td th:text="${flight.itineraries[0].segments[0].arrival.iataCode}">Destination</td>
-        <td class ="datetime" th:text="${flight.itineraries[0].segments[0].departure.at}">Departure Date</td>
-        <td th:text="${numberOfPassengers}">Number of passengers</td>
-        <td th:text="${flight.price.total}">Price</td>
-        <td th:text="${flight.price.currency}">Currency</td>
-      </tr>
-    </table>
-  </div>
+      <table>
+        <thead>
+        <tr>
+          <th>Departure Airport</th>
+          <th>Destination Airport</th>
+          <th class="sortable" data-sort="datetime">Departure Time</th>
+          <th>Number of passengers</th>
+          <th class="sortable" data-sort="price">Total price</th>
+          <th>Currency</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="flight : ${returningAlternatives}">
+          <td th:text="${flight.itineraries[0].segments[0].departure.iataCode}">Origin</td>
+          <td th:text="${flight.itineraries[0].segments[0].arrival.iataCode}">Destination</td>
+          <td class="datetime" th:text="${flight.itineraries[0].segments[0].departure.at}">Departure Date</td>
+          <td th:text="${numberOfPassengers}">Number of passengers</td>
+          <td th:text="${flight.price.total}">Price</td>
+          <td th:text="${flight.price.currency}">Currency</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </main>
 </body>
@@ -141,5 +163,5 @@
   alert([[${error}]]);
 </script>
 <script src="https://kit.fontawesome.com/1ca0ae003b.js" crossorigin="anonymous"></script>
-
+<script src="/js/script.js"></script>
 </html>
